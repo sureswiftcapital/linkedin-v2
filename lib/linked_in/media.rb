@@ -47,7 +47,7 @@ module LinkedIn
     end
 
     def content_type(media)
-      ::MIME::Types.type_for(extension(media)).first.content_type
+      ::MIME::Types.type_for(extension(media)).first&.content_type
     end
 
     def file(source_url, options)
