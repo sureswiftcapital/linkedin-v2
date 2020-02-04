@@ -5,6 +5,7 @@ module LinkedIn
   DEFAULT_TIMEOUT_SECONDS = 300
   POLL_SLEEP_SECONDS = 5
 
+  DEFAULT_ASSET_TYPE = "image"
   CONTENT_TYPE = "application/json"
   UPLOAD_MECHANISM = "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
 
@@ -79,13 +80,14 @@ module LinkedIn
     end
 
     def register_upload(options = {})
+      asset_type = options.delete(:asset_type) || DEFAULT_ASSET_TYPE
       owner = options.delete(:owner)
       register_upload_endpoint = LinkedIn.config.api_version + '/assets?action=registerUpload'
 
       register_upload_body = {
         registerUploadRequest: {
           owner: owner,
-          recipes: [ "urn:li:digitalmediaRecipe:feedshare-image" ],
+          recipes: [ "urn:li:digitalmediaRecipe:feedshare-#{asset_type}" ],
           serviceRelationships: [
               {
                 identifier: "urn:li:userGeneratedContent",
