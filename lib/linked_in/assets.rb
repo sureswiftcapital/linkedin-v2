@@ -30,7 +30,7 @@ module LinkedIn
     # @return [String], the asset entity
     #
     def upload(options = {})
-      asset_entity, upload_url = register_upload(options)
+      asset_entity, upload_headers, upload_url = register_upload(options)
 
       source_url = options.delete(:source_url)
       timeout = options.delete(:timeout) || DEFAULT_TIMEOUT_SECONDS
@@ -41,9 +41,18 @@ module LinkedIn
       content_type = content_type(media)
 
       upload_resp = @connection.put(media_upload_endpoint) do |req|
-        req.headers['Content-Type'] = content_type
+        if upload_headers.present?
+          req.headers['Content-Type'] = upload_headers.content_type
+          req.headers['x-amz-server-side-encryption-aws-kms-key-id'] = upload_headers.x_amz_server_side_encryption_aws_kms_key_id
+          req.headers['x-amz-server-side-encryption'] = upload_headers.x_amz_server_side_encryption
+          req.headers.delete('Authorization')
+        else
+          req.headers['Content-Type'] = content_type
+        end
+
         req.headers['Content-Length'] = media.size.to_s
-        req.body = Faraday::UploadIO.new(media, content_type)
+        req.body = Faraday::UploadIO.new(media, upload_headers.content_type || content_type)
+
         req.options.timeout = timeout
         req.options.open_timeout = timeout
       end
@@ -104,9 +113,10 @@ module LinkedIn
 
       resp = Mash.from_json(response.body)
       asset_entity = resp.value.asset
+      upload_headers = resp.value.uploadMechanism[UPLOAD_MECHANISM].headers || {}
       upload_url = resp.value.uploadMechanism[UPLOAD_MECHANISM].upload_url
 
-      [asset_entity, upload_url]
+      [asset_entity, upload_headers, upload_url]
     end
 
     def poll_for_completion(asset_entity:)
