@@ -93,7 +93,8 @@ module LinkedIn
                 identifier: "urn:li:userGeneratedContent",
                 relationshipType: "OWNER"
               }
-          ]
+          ],
+          supportedUploadMechanism: ["SYNCHRONOUS_UPLOAD"]
         }
       }.to_json
 
