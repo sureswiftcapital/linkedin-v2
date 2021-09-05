@@ -40,8 +40,8 @@ module LinkedIn
     # @see https://developer.linkedin.com/docs/guide/v2/organizations/organization-lookup-api#acls
     #
     def organization_acls(options = {})
-      path = '/organizationalEntityAcls'
-      get(path, options)
+      path = '/organizationAcls'
+      get(path, options.merge(headers: { "X-Restli-Protocol-Version" => "2.0.0" }))
     end
 
     # Perform a keyword-based Organization search sorted by relevance

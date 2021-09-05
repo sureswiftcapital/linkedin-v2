@@ -1,7 +1,8 @@
 # Changelog
 
+## 0.3.0 - September 06, 2021
+* Use /organizationAcls
 ## 1.0.0 - August 1, 2014
-
 * Complete re-architecture of the Oauth2.0 gem.
 
 ## 0.1.0 - July 15, 2013
