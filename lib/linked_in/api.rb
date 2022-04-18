@@ -62,7 +62,8 @@ module LinkedIn
                                               :comment,
                                               :get_share,
                                               :get_social_actions,
-                                              :migrate_update_keys
+                                              :migrate_update_keys,
+                                              :ugc_post
 
     # To be deprecated 01.30.2020
     def_delegators :@media, :summary,

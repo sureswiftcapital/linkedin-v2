@@ -4,6 +4,7 @@ require 'open-uri'
 module LinkedIn
   DEFAULT_TIMEOUT_SECONDS = 300
   DEFAULT_POLL_SLEEP_SECONDS = 10
+  DEFAULT_ASSET_TYPE = "image"
 
   CONTENT_TYPE = "application/json"
   UPLOAD_MECHANISM = "com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"
@@ -81,22 +82,25 @@ module LinkedIn
     end
 
     def register_upload(options = {})
+      asset_type = options.delete(:asset_type) || DEFAULT_ASSET_TYPE
+
       owner = options.delete(:owner)
       register_upload_endpoint = LinkedIn.config.api_version + '/assets?action=registerUpload'
 
       register_upload_body = {
         registerUploadRequest: {
           owner: owner,
-          recipes: [ "urn:li:digitalmediaRecipe:feedshare-image" ],
+          recipes: ["urn:li:digitalmediaRecipe:feedshare-#{asset_type}"],
           serviceRelationships: [
               {
                 identifier: "urn:li:userGeneratedContent",
                 relationshipType: "OWNER"
               }
           ],
-          supportedUploadMechanism: ["SYNCHRONOUS_UPLOAD"]
         }
-      }.to_json
+      }
+      register_upload_body[:registerUploadRequest][:supportedUploadMechanism] = ["SYNCHRONOUS_UPLOAD"] if asset_type == "image"
+      register_upload_body = register_upload_body.to_json
 
       response = @connection.post(register_upload_endpoint, register_upload_body) do |req|
         req.headers["Content-Type"] = CONTENT_TYPE
