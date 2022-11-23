@@ -41,7 +41,7 @@ module LinkedIn
     #
     def organization_acls(options = {})
       path = '/organizationAcls'
-      get(path, options)
+      get(path, options.merge(headers: { "X-Restli-Protocol-Version" => "2.0.0" }))
     end
 
     # Perform a keyword-based Organization search sorted by relevance

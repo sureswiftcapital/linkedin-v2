@@ -62,10 +62,15 @@ module LinkedIn
                                               :comment,
                                               :get_share,
                                               :get_social_actions,
-                                              :migrate_update_keys
+                                              :migrate_update_keys,
+                                              :ugc_post
 
+    # To be deprecated 01.30.2020
     def_delegators :@media, :summary,
                             :upload
+
+    def_delegators :@assets, :summary,
+                             :upload
 
     private ##############################################################
 
@@ -77,6 +82,7 @@ module LinkedIn
       @communications = LinkedIn::Communications.new(@connection)
       @share_and_social_stream = LinkedIn::ShareAndSocialStream.new(@connection)
       @media = LinkedIn::Media.new(@connection)
+      @assets= LinkedIn::Assets.new(@connection)
       # @groups = LinkedIn::Groups.new(@connection) not supported by v2 API?
     end
 

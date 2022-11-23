@@ -70,6 +70,11 @@ module LinkedIn
       post(path, MultiJson.dump(defaults.merge(options)), 'Content-Type' => 'application/json')
     end
 
+    def ugc_post(options = {})
+      path = '/ugcPosts'
+      post(path, MultiJson.dump(options), {'Content-Type' => 'application/json', "X-Restli-Protocol-Version" => "2.0.0"})
+    end
+
     # Retrieve a Summary of Social Actions
     #
     # https://docs.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/network-update-social-actions#retrieve-a-summary-of-social-actions
