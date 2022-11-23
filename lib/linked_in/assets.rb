@@ -39,7 +39,7 @@ module LinkedIn
 
       media_upload_endpoint = upload_url
 
-      media = open(source_url, 'rb')
+      media = URI.open(source_url, 'rb')
       content_type = content_type(media)
 
       upload_resp = @connection.put(media_upload_endpoint) do |req|
