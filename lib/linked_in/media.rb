@@ -51,7 +51,7 @@ module LinkedIn
     end
 
     def file(source_url, options)
-      media = open(source_url, 'rb')
+      media = URI.open(source_url, 'rb')
       io = StringIO.new(media.read)
       filename = options.delete(:disposition_filename) || upload_filename(media)
       Faraday::UploadIO.new(io, content_type(media), filename)
